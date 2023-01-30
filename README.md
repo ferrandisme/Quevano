@@ -4,7 +4,7 @@ Optical character recognition in Java.
 
 ### Documentation
 
-It uses the [tessereact](http://https://github.com/tesseract-ocr/tesseract "tessereact") libraby by google.
+It uses the [tessereact](http://https://github.com/tesseract-ocr/tesseract "tessereact") library by google.
 
 [Supported languages](https://tesseract-ocr.github.io/tessdoc/Data-Files.html "Supported languages"). In post you can send the image and the language code.
 
