@@ -10,11 +10,8 @@ import java.io.File;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ImageUtilsTest {
-
-    /**
-     * Local directory where you have tessdata_best data (github clone)
-     */
-    private static final String LOCAL_TESS_DIRECTORY = "src/main/resources/data/tessdata";
+    
+    private static final String LOCAL_TESS_DIRECTORY = ImageUtils.LOCAL_TESS_DIRECTORY;
 
 
     @Test

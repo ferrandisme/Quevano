@@ -11,7 +11,7 @@ public class ImageUtils {
     /**
      * Local directory where you have tessdata_best data (github clone)
      */
-    private static final String LOCAL_TESS_DIRECTORY = "src/main/resources/data/tessdata";
+    public static final String LOCAL_TESS_DIRECTORY = "src/main/resources/data/tessdata";
 
 
     public static String readImage(File image) throws TesseractException {
