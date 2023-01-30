@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import reactor.core.publisher.Mono;
 
 import java.io.*;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 public class ImageController {
 
@@ -28,27 +28,34 @@ public class ImageController {
     }
 
     @PostMapping(value = "/v1/image/convert/{language}")
-    public Mono<String> convertImage(@PathVariable String language, @RequestPart(value = "file") final FilePart rawFile) {
-        File file;
+    public String convertImage(@PathVariable String language, @RequestPart(value = "file") final MultipartFile rawFile) {
+        File file = convertImage(rawFile);
         try {
-            file = convertImage(rawFile);
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Can't convert image");
-        }
-        try {
-            return service.convertImage(file, language);
+            String result = service.convertImage(file, language);
+            log.info("Translated OK origin: {} , result: '{}'", file.getName(), result);
+            return result;
         } catch (TesseractException e) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(505), "Error reading image: " + e.getLocalizedMessage());
+            throw new ResponseStatusException(HttpStatusCode.valueOf(500), "Error converting image: " + e.getLocalizedMessage());
         }
     }
 
 
-    private static File convertImage(FilePart rawImage) throws IOException, IOException {
-        //TODO add  UUID.randomUUID()
-        //TODO temp dir not works
-        // File file = new File(System.getProperty("java.io.tmpdir") + rawImage.filename());
-        File file = new File("src/resources/" + rawImage.filename());
-        rawImage.transferTo(file);
+    private File convertImage(MultipartFile rawImage) {
+        String route = System.getProperty("java.io.tmpdir") + getFileName(rawImage);
+        File file = new File(route);
+        log.info("Saving image in: {}", route);
+        try {
+            rawImage.transferTo(file);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Error reading image: " + e.getLocalizedMessage());
+        }
         return file;
     }
+
+    private String getFileName(MultipartFile rawImage) {
+        String format = "." + rawImage.getContentType().split("/")[1];
+        return UUID.randomUUID() + format;
+    }
+
+
 }

@@ -14,7 +14,8 @@ class ImageUtilsTest {
     /**
      * Local directory where you have tessdata_best data (github clone)
      */
-    private static final String LOCAL_TESS_DIRECTORY = "F:\\tess";
+    private static final String LOCAL_TESS_DIRECTORY = "src/main/resources/data/tessdata";
+
 
     @Test
     void testIsLibraryConfigured() throws TesseractException {
@@ -26,7 +27,7 @@ class ImageUtilsTest {
         tesseract.setOcrEngineMode(1);
         String result = tesseract.doOCR(image);
 
-        assertTrue(result.contains("work"));
+        assertTrue(result.contains("Test work OK"));
     }
 
 
@@ -39,7 +40,7 @@ class ImageUtilsTest {
         tesseract.setPageSegMode(1);
         tesseract.setOcrEngineMode(1);
         String expected = tesseract.doOCR(image);
-        String result = ImageUtils.readImage(image).block();
+        String result = ImageUtils.readImage(image);
         assertEquals(expected, result, expected + " != " + result);
     }
 }
